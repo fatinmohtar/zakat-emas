@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 public class MainActivity2 extends AppCompatActivity {
 
@@ -32,12 +33,19 @@ public class MainActivity2 extends AppCompatActivity {
         EditText Weight = (EditText) findViewById(R.id.Weight);
         float w = Float.parseFloat(Weight.getText().toString());
 
+        if (w == 0){
+            Toast.makeText(MainActivity2.this,"please fill the weight", Toast.LENGTH_LONG).show();
+        }
+
         RadioButton Keep = (RadioButton) findViewById(R.id.Keep);
         RadioButton Wear = (RadioButton) findViewById(R.id.Wear);
 
         float tv = 0, tgv = 0;
         double  zp = 0,tz = 0;
 
+        if (!Keep.isChecked() && !Wear.isChecked()){
+            Toast.makeText(MainActivity2.this,"please select the type", Toast.LENGTH_LONG).show();
+        }
         if (Keep.isChecked()){
             tgv = w - 85;
         } else if (Wear.isChecked()){
@@ -46,6 +54,10 @@ public class MainActivity2 extends AppCompatActivity {
 
         EditText currentValue = (EditText) findViewById(R.id.currentValue);
         float cv = Float.parseFloat(currentValue.getText().toString());
+
+        if (cv == 0){
+            Toast.makeText(MainActivity2.this,"please fill the current value", Toast.LENGTH_LONG).show();
+        }
 
         //total value
         tv = w * cv;
