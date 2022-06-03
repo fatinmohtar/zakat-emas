@@ -1,18 +1,24 @@
 package com.fatin.zakat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 public class MainActivity2 extends AppCompatActivity {
 
-    public static final String EXTRA_NUMBER = "com.fatin.zakat.EXTRA_NUMBER";
-    //if need 2
+
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,54 +29,59 @@ public class MainActivity2 extends AppCompatActivity {
         getValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openMainActivity3(); //output page
+
+                EditText Weight = (EditText) findViewById(R.id.Weight);
+                float w = Float.parseFloat(Weight.getText().toString());
+
+                RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
+                RadioButton Keep = (RadioButton) findViewById(R.id.Keep);
+                RadioButton Wear = (RadioButton) findViewById(R.id.Wear);
+
+                EditText currentValue = (EditText) findViewById(R.id.currentValue);
+                float cv = Float.parseFloat(currentValue.getText().toString());
+
+                if (w == 0) {
+                    Toast.makeText(MainActivity2.this, "please fill the weight", Toast.LENGTH_LONG).show();
+                } else if (!Keep.isChecked() && !Wear.isChecked()) {
+                    Toast.makeText(MainActivity2.this, "please select the types", Toast.LENGTH_LONG).show();
+                } else if (cv == 0) {
+                    Toast.makeText(MainActivity2.this, "please fill the current value", Toast.LENGTH_LONG).show();
+                }
+
+                float checked = 0;
+                if (Keep.isChecked()) {
+                    checked = 1;
+                } else if (Wear.isChecked()) {
+                    checked = 2;
+                }
+
+                //pas value
+                Intent intent = new Intent(getApplicationContext(), MainActivity3.class);
+                intent.putExtra("weight", w);
+                intent.putExtra("checked", checked);
+                intent.putExtra("currentValue", cv);
+                startActivity(intent);
             }
         });
     }
 
-    public void openMainActivity3(){
 
-        EditText Weight = (EditText) findViewById(R.id.Weight);
-        float w = Float.parseFloat(Weight.getText().toString());
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
 
-        if (w == 0){
-            Toast.makeText(MainActivity2.this,"please fill the weight", Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.about:
+                //page link
+                Intent i = new Intent(this, MainActivity4.class);
+                startActivity(i);
+
+                break;
         }
-
-        RadioButton Keep = (RadioButton) findViewById(R.id.Keep);
-        RadioButton Wear = (RadioButton) findViewById(R.id.Wear);
-
-        float tv = 0, tgv = 0;
-        double  zp = 0,tz = 0;
-
-        if (!Keep.isChecked() && !Wear.isChecked()){
-            Toast.makeText(MainActivity2.this,"please select the type", Toast.LENGTH_LONG).show();
-        }
-        if (Keep.isChecked()){
-            tgv = w - 85;
-        } else if (Wear.isChecked()){
-            tgv = w - 200;
-        }
-
-        EditText currentValue = (EditText) findViewById(R.id.currentValue);
-        float cv = Float.parseFloat(currentValue.getText().toString());
-
-        if (cv == 0){
-            Toast.makeText(MainActivity2.this,"please fill the current value", Toast.LENGTH_LONG).show();
-        }
-
-        //total value
-        tv = w * cv;
-        //zakat payable
-        zp = tgv * cv;
-        //total zakat
-        tz = zp * 0.025;
-
-        //pas value
-        Intent intent = new Intent(this,MainActivity3.class);
-        intent.putExtra("TOTAL VALUE",tv);
-        intent.putExtra("Z PAYABLE",zp);
-        intent.putExtra(EXTRA_NUMBER,tz);
-        startActivity(intent);
+        return super.onOptionsItemSelected(item);
     }
 }
