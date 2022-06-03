@@ -1,6 +1,7 @@
 package com.fatin.zakat;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,45 +11,19 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Button button;
+    private static int SPLASH_TIME_OUT = 500;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View view) {
-                openGETSTARTED();
+            public void run() {
+                Intent homeIntent = new Intent(MainActivity.this, MainActivity2.class);
+                startActivity(homeIntent);
+                finish();
             }
-        });
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.about:
-                //page link
-                Intent i =new Intent(this, MainActivity4.class);
-                startActivity(i);
-
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    public void openGETSTARTED() {
-        Intent intent = new Intent(this, MainActivity2.class);
-        startActivity(intent);
+        },SPLASH_TIME_OUT);
     }
 }
